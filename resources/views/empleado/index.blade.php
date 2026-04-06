@@ -1,47 +1,58 @@
 Mostrar las lista de empleados
-<table class="table table-light">
+@extends('layouts.app')
 
-<thead class="thead-light">
-    <tr>
-        <th>#</th>
-        <th>Foto</th>
-        <th>Nombre</th>
-        <th>Apellido Paterno</th>
-        <th>Apellido Materno</th>
-        <th>Correo</th>
-        <th>Acciones</th>
-    </tr>
-</thead>
+@section('content')
+<div class="container">
+    <h2>Lista de empleados</h2>
 
-<tbody>
-    @foreach( $empleados as $empleado )
-    <tr>
-        <td>{{ $empleado->id }}</td>
-        <td>{{ $empleado->Foto }}</td>
-        <td>{{ $empleado->Nombre }}</td>
-        <td>{{ $empleado->ApellidoPaterno }}</td>
-        <td>{{ $empleado->ApellidoMaterno }}</td>
-        <td>{{ $empleado->Correo }}</td>
-        <td>
-            
-        <a href="{{ url('/empleado/'.$empleado->id.'/edit') }}">
-            Editar
+    @if (session('mensaje'))
+        <div class="alert alert-success">{{ session('mensaje') }}</div>
+    @endif
 
-        </a>
-        | 
-        
-        <form action="{{ url('/empleado/'.$empleado->id ) }}" method="post">
-        @csrf
-        {{ method_field('DELETE') }}
+    <a href="{{ url('/empleado/create') }}" class="btn btn-success mb-3">Agregar empleado</a>
 
-        <input type="submit" onclick="return confirm('¿Quieres borrar?')"
-        value="Borrar">
+    <table class="table table-light table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th>#</th>
+                <th>Foto</th>
+                <th>Nombre</th>
+                <th>Apellido Paterno</th>
+                <th>Apellido Materno</th>
+                <th>Correo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($empleados as $empleado)
+            <tr>
+                <td>{{ $empleado->id }}</td>
+                <td>
+                    @if ($empleado->Foto)
+                        <img src="{{ asset('storage/' . $empleado->Foto) }}" width="60">
+                    @endif
+                </td>
+                <td>{{ $empleado->Nombre }}</td>
+                <td>{{ $empleado->ApellidoPaterno }}</td>
+                <td>{{ $empleado->ApellidoMaterno }}</td>
+                <td>{{ $empleado->correo }}</td>
+                <td>
+                    <a href="{{ url('/empleado/' . $empleado->id . '/edit') }}" class="btn btn-warning btn-sm">Editar</a>
 
-        </form>
-        
-        </td>
-    </tr>
-    @endforeach
-</tbody>
+                    <form action="{{ url('/empleado/' . $empleado->id) }}" method="post" style="display:inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('¿Quieres borrar este empleado?')">
+                            Borrar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 
-</table>
+    {{ $empleados->links() }}
+</div>
+@endsection

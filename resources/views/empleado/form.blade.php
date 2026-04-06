@@ -1,25 +1,43 @@
-Formulario que tendra los datos en comun coon crate y edit
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
-<label for="Nombre"> Nombre </label>
-<input type="text" name="Nombre" value="{{ $empleado->Nombre ?? '' }}" id="Nombre">
-<br>
+<div class="mb-3">
+    <label for="Nombre">Nombre</label>
+    <input type="text" name="Nombre" value="{{ old('Nombre', $empleado->Nombre ?? '') }}"
+        id="Nombre" class="form-control">
+</div>
 
-<label for="ApellidoPaterno"> Apellido Paterno </label>
-<input type="text" name="ApellidoPaterno" value="{{ $empleado->ApellidoPaterno ?? '' }}" id="ApellidoPaterno">
-<br>
+<div class="mb-3">
+    <label for="ApellidoPaterno">Apellido Paterno</label>
+    <input type="text" name="ApellidoPaterno" value="{{ old('ApellidoPaterno', $empleado->ApellidoPaterno ?? '') }}"
+        id="ApellidoPaterno" class="form-control">
+</div>
 
-<label for="ApellidoMaterno"> Apellido Materno </label>
-<input type="text" name="ApellidoMaterno" value="{{ $empleado->ApellidoMaterno ?? '' }}" id="ApellidoMaterno">
-<br>
+<div class="mb-3">
+    <label for="ApellidoMaterno">Apellido Materno</label>
+    <input type="text" name="ApellidoMaterno" value="{{ old('ApellidoMaterno', $empleado->ApellidoMaterno ?? '') }}"
+        id="ApellidoMaterno" class="form-control">
+</div>
 
-<label for="Correo"> Correo </label>
-<input type="text" name="Correo" value="{{ $empleado->Correo ?? '' }}" id="Correo">
-<br>
+<div class="mb-3">
+    <label for="correo">Correo</label>
+    <input type="text" name="correo" value="{{ old('correo', $empleado->correo ?? '') }}"
+        id="correo" class="form-control">
+</div>
 
-<label for="Foto"> Foto </label>
-{{ $empleado->Foto ?? '' }}
-<input type="file" name="Foto" id="Foto">
-<br>
+<div class="mb-3">
+    <label for="Foto">Foto</label><br>
+    @if (!empty($empleado->Foto))
+        <img src="{{ asset('storage/' . $empleado->Foto) }}" width="100" class="mb-2 d-block">
+    @endif
+    <input type="file" name="Foto" id="Foto" class="form-control">
+</div>
 
-<input type="submit" value="Guardar datos">
-<br>
+<button type="submit" class="btn btn-primary">Guardar datos</button>

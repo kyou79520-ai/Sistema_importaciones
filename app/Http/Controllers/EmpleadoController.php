@@ -50,34 +50,21 @@ class EmpleadoController extends Controller
         $empleado = Empleado::findOrFail($id);
         return view('empleado.edit', compact('empleado'));
     }
+public function update(Request $request, $id)
+{
+    $empleado = Empleado::findOrFail($id);
+    $datosEmpleado = $request->except(['_token', '_method']);
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'Nombre'          => 'required',
-            'ApellidoPaterno' => 'required',
-            'ApellidoMaterno' => 'required',
-            'correo'          => 'required|email',
-            'Foto'            => 'nullable|image',
-        ]);
-
-        $datosEmpleado = $request->except(['_token', '_method']);
-
-        if ($request->hasFile('Foto')) {
-            // Eliminar foto anterior
-            $empleado = Empleado::findOrFail($id);
-            if ($empleado->Foto) {
-                Storage::disk('public')->delete($empleado->Foto);
-            }
-            $datosEmpleado['Foto'] = $request->file('Foto')->store('uploads', 'public');
-        } else {
-            unset($datosEmpleado['Foto']);
-        }
-
-        Empleado::where('id', $id)->update($datosEmpleado);
-
-        return redirect('empleado')->with('mensaje', 'Registro modificado con éxito');
+    if ($request->hasFile('Foto')) {
+        $datosEmpleado['Foto'] = $request->file('Foto')->store('uploads', 'public');
+    } else {
+        unset($datosEmpleado['Foto']);
     }
+
+    $empleado->update($datosEmpleado);
+
+    return redirect('empleado')->with('success', 'Empleado actualizado');
+}
 
     public function destroy($id)
     {

@@ -9,8 +9,9 @@
     @endif
 
     <form action="{{ url('/empleado') }}" method="post" enctype="multipart/form-data">
-        @csrf
-        @include('empleado.form')
-    </form>
+    @csrf
+    @include('empleado.form')
+    <input type="submit" value="Guardar">
+</form>
 </div>
 @endsection

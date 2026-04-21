@@ -14,10 +14,11 @@ class EmpleadoController extends Controller
         return view('empleado.index', $datos);
     }
 
-    public function create()
-    {
-        return view('empleado.create');
-    }
+   public function create()
+{
+    $empleado = new Empleado();
+    return view('empleado.create', compact('empleado'));
+}
 
     public function store(Request $request)
     {

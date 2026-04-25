@@ -29,9 +29,30 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-
-                    </ul>
+                   <ul class="navbar-nav me-auto">
+    @auth
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('dashboard') }}">🏠 Dashboard</a>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">📦 Importaciones</a>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{ route('importacion.index') }}">Ver todas</a></li>
+            <li><a class="dropdown-item" href="{{ route('importacion.create') }}">Nueva importación</a></li>
+        </ul>
+    </li>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">📁 Catálogos</a>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{ route('agente-aduanal.index') }}">Agentes Aduanales</a></li>
+            <li><a class="dropdown-item" href="{{ route('empresa-extranjera.index') }}">Empresas Extranjeras</a></li>
+            <li><a class="dropdown-item" href="{{ route('empresa-importadora.index') }}">Empresas Importadoras</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{ route('empleado.index') }}">Empleados</a></li>
+        </ul>
+    </li>
+    @endauth
+</ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">

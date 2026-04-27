@@ -1,6 +1,11 @@
 <?php
+ 
+namespace App\Models;
+ 
+use Illuminate\Database\Eloquent\Model;
 
-class Impuesto extends Model {
+class Impuesto extends Model
+{
     protected $table = 'impuesto';
     protected $primaryKey = 'id_impuesto';
     protected $fillable = ['id_importacion','tipo_impuesto','base_imponible','tasa_porcentaje','monto'];

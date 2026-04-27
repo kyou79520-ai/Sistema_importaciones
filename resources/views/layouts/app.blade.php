@@ -51,6 +51,13 @@
             <li><a class="dropdown-item" href="{{ route('empleado.index') }}">Empleados</a></li>
         </ul>
     </li>
+    <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">⚙️ Admin</a>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="{{ route('usuario.index') }}">Usuarios</a></li>
+        <li><a class="dropdown-item" href="{{ route('rol.index') }}">Roles</a></li>
+    </ul>
+</li>
     @endauth
 </ul>
 

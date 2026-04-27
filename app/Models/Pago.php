@@ -1,6 +1,11 @@
 <?php
+ 
+namespace App\Models;
+ 
+use Illuminate\Database\Eloquent\Model;
 
-class Pago extends Model {
+class Pago extends Model
+{
     protected $table = 'pago';
     protected $primaryKey = 'id_pago';
     protected $fillable = [
@@ -10,5 +15,6 @@ class Pago extends Model {
     protected $casts = ['fecha_pago' => 'date'];
  
     public function importacion() { return $this->belongsTo(Importacion::class, 'id_importacion'); }
-    public function usuario() { return $this->belongsTo(Usuario::class, 'id_usuario'); }
+    public function usuario()     { return $this->belongsTo(Usuario::class, 'id_usuario', 'id_usuario'); }
 }
+ 

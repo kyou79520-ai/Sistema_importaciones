@@ -198,7 +198,51 @@
             </div>
         </div>
     </div>
- 
+ {{-- Costos --}}
+<div class="card shadow-sm mt-3">
+    <div class="card-header fw-bold">🧮 Costos de Importación</div>
+    <div class="card-body">
+        <form action="{{ route('importacion.costos.store', $importacion->id_importacion) }}" method="POST" class="row g-2 mb-3">
+            @csrf
+            <div class="col-md-2">
+                <select name="tipo_costo" class="form-select form-select-sm" required>
+                    @foreach(['flete','seguro','gastos_aduanales','honorarios','almacenaje','otro'] as $t)
+                        <option>{{ $t }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-2"><input type="number" name="seguro" class="form-control form-control-sm" placeholder="Seguro" step="0.01"></div>
+            <div class="col-md-2"><input type="number" name="gastos_aduanales" class="form-control form-control-sm" placeholder="Gtos. Aduanales" step="0.01"></div>
+            <div class="col-md-2"><input type="number" name="otros_gastos" class="form-control form-control-sm" placeholder="Otros" step="0.01"></div>
+            <div class="col-md-2"><input type="text" name="moneda" class="form-control form-control-sm" value="MXN" maxlength="10"></div>
+            <div class="col-md-2"><button class="btn btn-success btn-sm w-100">➕</button></div>
+        </form>
+        <table class="table table-sm mb-0">
+            <thead class="table-light"><tr><th>Tipo</th><th>Seguro</th><th>Aduanales</th><th>Otros</th><th>Total</th><th>Moneda</th><th></th></tr></thead>
+            <tbody>
+                @forelse($importacion->costos as $costo)
+                <tr>
+                    <td>{{ $costo->tipo_costo }}</td>
+                    <td>${{ number_format($costo->seguro,2) }}</td>
+                    <td>${{ number_format($costo->gastos_aduanales,2) }}</td>
+                    <td>${{ number_format($costo->otros_gastos,2) }}</td>
+                    <td><strong>${{ number_format($costo->total_costos,2) }}</strong></td>
+                    <td>{{ $costo->moneda }}</td>
+                    <td>
+                        <form action="{{ route('importacion.costos.destroy', $costo->id_costo) }}" method="POST">
+                            @csrf @method('DELETE')
+                            <button class="btn btn-danger btn-sm">🗑</button>
+                        </form>
+                    </td>
+                </tr>
+                @empty
+                <tr><td colspan="7" class="text-center text-muted">Sin costos registrados</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+------------------------------------------------------------
     {{-- Documentos --}}
     <div class="card shadow-sm mt-3">
         <div class="card-header fw-bold">📎 Documentos</div>

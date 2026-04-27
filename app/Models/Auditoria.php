@@ -1,6 +1,11 @@
 <?php
+ 
+namespace App\Models;
+ 
+use Illuminate\Database\Eloquent\Model;
 
-class Auditoria extends Model {
+class Auditoria extends Model
+{
     public $timestamps = false;
     protected $table = 'auditoria';
     protected $primaryKey = 'id_auditoria';
@@ -13,5 +18,5 @@ class Auditoria extends Model {
         'valores_nuevos'     => 'array',
         'fecha_hora'         => 'datetime',
     ];
-    public function usuario() { return $this->belongsTo(Usuario::class, 'id_usuario'); }
+    public function usuario() { return $this->belongsTo(Usuario::class, 'id_usuario', 'id_usuario'); }
 }

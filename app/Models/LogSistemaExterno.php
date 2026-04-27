@@ -1,6 +1,11 @@
 <?php
+ 
+namespace App\Models;
+ 
+use Illuminate\Database\Eloquent\Model;
 
-class LogSistemaExterno extends Model {
+class LogSistemaExterno extends Model
+{
     public $timestamps = false;
     protected $table = 'log_sistema_externo';
     protected $primaryKey = 'id_log';
@@ -9,5 +14,6 @@ class LogSistemaExterno extends Model {
         'estado','mensaje_respuesta','fecha_sincronizacion'
     ];
     protected $casts = ['fecha_sincronizacion' => 'datetime'];
+ 
     public function importacion() { return $this->belongsTo(Importacion::class, 'id_importacion'); }
 }

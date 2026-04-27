@@ -1,19 +1,23 @@
 <?php
 
+namespace App\Http\Controllers;
+
 use App\Models\Impuesto;
- 
+use App\Models\Importacion;
+use Illuminate\Http\Request;
+
 class ImpuestoController extends Controller
 {
     public function store(Request $request, Importacion $importacion)
     {
         $request->validate([
-            'tipo_impuesto'  => 'required',
-            'base_imponible' => 'required|numeric|min:0',
-            'tasa_porcentaje'=> 'required|numeric|min:0|max:100',
+            'tipo_impuesto'   => 'required|in:IGI,IVA,DTA,PRV,IEPS,otro',
+            'base_imponible'  => 'required|numeric|min:0',
+            'tasa_porcentaje' => 'required|numeric|min:0|max:100',
         ]);
- 
-        $monto = $request->base_imponible * ($request->tasa_porcentaje / 100);
- 
+
+        $monto = round($request->base_imponible * ($request->tasa_porcentaje / 100), 2);
+
         Impuesto::create([
             'id_importacion'  => $importacion->id_importacion,
             'tipo_impuesto'   => $request->tipo_impuesto,
@@ -21,14 +25,13 @@ class ImpuestoController extends Controller
             'tasa_porcentaje' => $request->tasa_porcentaje / 100,
             'monto'           => $monto,
         ]);
- 
-        // Actualizar total en importación
+
         $total = $importacion->impuestos()->sum('monto');
         $importacion->update(['total_impuestos' => $total]);
- 
-        return back()->with('mensaje', 'Impuesto agregado. Monto: $'.number_format($monto, 2));
+
+        return back()->with('mensaje', 'Impuesto agregado. Monto: $' . number_format($monto, 2));
     }
- 
+
     public function destroy(Impuesto $impuesto)
     {
         $importacion = $impuesto->importacion;

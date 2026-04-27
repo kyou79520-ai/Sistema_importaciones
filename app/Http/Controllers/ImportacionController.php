@@ -46,7 +46,7 @@ class ImportacionController extends Controller
  
         $importacion = Importacion::create([
             'numero_importacion'    => $request->numero_importacion,
-            'id_usuario'            => auth()->id(), // ajustar si usas tabla usuario propia
+            'id_usuario' => \App\Models\Usuario::first()->id_usuario,
             'id_empresa_mx'         => $request->id_empresa_mx,
             'id_empresa_extranjera' => $request->id_empresa_extranjera,
             'proveedor'             => $request->proveedor,

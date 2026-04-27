@@ -1,4 +1,8 @@
 <?php
+namespace App\Http\Controllers;
+
+use App\Models\AgenteAduanal;
+use Illuminate\Http\Request;
 
 class AgenteAduanalController extends Controller
 {
@@ -7,12 +11,12 @@ class AgenteAduanalController extends Controller
         $agentes = AgenteAduanal::withCount('importaciones')->paginate(10);
         return view('agente_aduanal.index', compact('agentes'));
     }
- 
+
     public function create()
     {
         return view('agente_aduanal.create');
     }
- 
+
     public function store(Request $request)
     {
         $request->validate([
@@ -21,20 +25,20 @@ class AgenteAduanalController extends Controller
             'aduana_adscrita' => 'required',
         ]);
         AgenteAduanal::create($request->all());
-        return redirect()->route('agente-aduanal.index')->with('mensaje', 'Agente aduanal registrado.');
+        return redirect()->route('agente-aduanal.index')->with('mensaje', 'Agente registrado.');
     }
- 
+
     public function edit(AgenteAduanal $agenteAduanal)
     {
         return view('agente_aduanal.edit', ['agente' => $agenteAduanal]);
     }
- 
+
     public function update(Request $request, AgenteAduanal $agenteAduanal)
     {
         $agenteAduanal->update($request->all());
         return redirect()->route('agente-aduanal.index')->with('mensaje', 'Agente actualizado.');
     }
- 
+
     public function destroy(AgenteAduanal $agenteAduanal)
     {
         $agenteAduanal->delete();

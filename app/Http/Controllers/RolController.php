@@ -13,13 +13,13 @@ class RolController extends Controller
 {
     public function index()
     {
-        $roles = Rol::withCount('usuarios')->with('permisos')->paginate(10);
+        $roles = Rol::withCount(['usuarios', 'permisos'])->paginate(10);
         return view('rol.index', compact('roles'));
     }
 
     public function create()
     {
-        $permisos = Permiso::orderBy('modulo')->orderBy('nombre')->get();
+        $permisos = Permiso::orderBy('modulo')->orderBy('nombre')->get()->groupBy('modulo');
         return view('rol.create', compact('permisos'));
     }
 

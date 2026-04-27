@@ -242,7 +242,7 @@
         </table>
     </div>
 </div>
-------------------------------------------------------------
+
     {{-- Documentos --}}
     <div class="card shadow-sm mt-3">
         <div class="card-header fw-bold">📎 Documentos</div>

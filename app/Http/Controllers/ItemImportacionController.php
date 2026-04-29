@@ -19,9 +19,10 @@ class ItemImportacionController extends Controller
             'codigo_hs'      => 'nullable|string|max:20',
         ]);
 
-        $ultimo      = $importacion->items()->max('numero_linea') ?? 0;
-        $valorTotal  = round($request->cantidad * $request->valor_unitario, 2);
+        $ultimo = $importacion->items()->max('numero_linea') ?? 0;
 
+        // NOTA: NO incluimos valor_total porque MariaDB lo calcula
+        // automáticamente como columna GENERATED ALWAYS AS STORED.
         ItemImportacion::create([
             'id_importacion' => $importacion->id_importacion,
             'numero_linea'   => $ultimo + 1,
@@ -29,16 +30,15 @@ class ItemImportacionController extends Controller
             'cantidad'       => $request->cantidad,
             'unidad_medida'  => $request->unidad_medida,
             'valor_unitario' => $request->valor_unitario,
-            'valor_total'    => $valorTotal,          // ← ahora se guarda
             'peso_kg'        => $request->peso_kg,
             'codigo_hs'      => $request->codigo_hs,
         ]);
 
-        // Actualizar total_cif en la importación
+        // Actualizar total_cif sumando los valor_total ya calculados por BD
         $totalCif = $importacion->items()->sum('valor_total');
         $importacion->update(['total_cif' => $totalCif]);
 
-        return back()->with('mensaje', 'Partida agregada. Total CIF actualizado: $' . number_format($totalCif, 2));
+        return back()->with('mensaje', 'Partida agregada. Total CIF: $' . number_format($totalCif, 2));
     }
 
     public function destroy(ItemImportacion $item)
@@ -47,14 +47,14 @@ class ItemImportacionController extends Controller
         $item->delete();
 
         // Renumerar líneas
-        $importacion->items()->orderBy('numero_linea')->each(function ($it, $idx) {
-            $it->update(['numero_linea' => $idx + 1]);
-        });
+        $importacion->items()->orderBy('numero_linea')->get()
+            ->each(function ($it, $idx) {
+                $it->update(['numero_linea' => $idx + 1]);
+            });
 
-        // Actualizar total_cif
         $totalCif = $importacion->items()->sum('valor_total');
         $importacion->update(['total_cif' => $totalCif]);
 
-        return back()->with('mensaje', 'Partida eliminada y líneas renumeradas.');
+        return back()->with('mensaje', 'Partida eliminada.');
     }
 }

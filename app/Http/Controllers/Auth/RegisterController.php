@@ -14,10 +14,10 @@ class RegisterController extends Controller
 
     protected $redirectTo = '/dashboard';
 
-    public function __construct()
-    {
-        $this->middleware('guest');
-    }
+    /**
+     * En Laravel 11+ el middleware 'guest' se aplica en routes/web.php,
+     * NO en el constructor.
+     */
 
     protected function validator(array $data)
     {

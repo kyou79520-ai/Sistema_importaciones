@@ -6,9 +6,6 @@ use App\Models\Rol;
 use App\Models\Permiso;
 use Illuminate\Http\Request;
 
-// ============================================================
-// ARCHIVO: app/Http/Controllers/RolController.php
-// ============================================================
 class RolController extends Controller
 {
     public function index()
@@ -26,14 +23,20 @@ class RolController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nombre'      => 'required|unique:rol|max:100',
-            'descripcion' => 'nullable|max:255',
+            'nombre_rol'  => 'required|unique:rol,nombre_rol|max:50',
+            'descripcion' => 'nullable',
         ]);
 
-        $rol = Rol::create($request->only('nombre', 'descripcion'));
+        $rol = Rol::create([
+            'nombre_rol'  => $request->nombre_rol,
+            'descripcion' => $request->descripcion,
+        ]);
 
         if ($request->filled('permisos')) {
-            $rol->permisos()->sync($request->permisos);
+            $datos = collect($request->permisos)
+                ->mapWithKeys(fn($id) => [$id => ['asignado_en' => now()]])
+                ->toArray();
+            $rol->permisos()->sync($datos);
         }
 
         return redirect()->route('rol.index')->with('mensaje', 'Rol creado correctamente.');
@@ -41,7 +44,7 @@ class RolController extends Controller
 
     public function edit(Rol $rol)
     {
-        $permisos             = Permiso::orderBy('modulo')->orderBy('nombre')->get();
+        $permisos              = Permiso::orderBy('modulo')->orderBy('nombre')->get();
         $permisosSeleccionados = $rol->permisos->pluck('id_permiso')->toArray();
         return view('rol.edit', compact('rol', 'permisos', 'permisosSeleccionados'));
     }
@@ -49,14 +52,20 @@ class RolController extends Controller
     public function update(Request $request, Rol $rol)
     {
         $request->validate([
-            'nombre'      => 'required|max:100|unique:rol,nombre,' . $rol->id_rol . ',id_rol',
-            'descripcion' => 'nullable|max:255',
+            'nombre_rol'  => 'required|max:50|unique:rol,nombre_rol,'.$rol->id_rol.',id_rol',
+            'descripcion' => 'nullable',
         ]);
 
-        $rol->update($request->only('nombre', 'descripcion'));
+        $rol->update([
+            'nombre_rol'  => $request->nombre_rol,
+            'descripcion' => $request->descripcion,
+        ]);
 
         if ($request->has('permisos')) {
-            $rol->permisos()->sync($request->permisos ?? []);
+            $datos = collect($request->permisos ?? [])
+                ->mapWithKeys(fn($id) => [$id => ['asignado_en' => now()]])
+                ->toArray();
+            $rol->permisos()->sync($datos);
         }
 
         return redirect()->route('rol.index')->with('mensaje', 'Rol actualizado.');

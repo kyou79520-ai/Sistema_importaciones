@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-// ============================================================
-// ARCHIVO: app/Http/Controllers/EmpresaExtranjController.php
-// ============================================================
 use App\Models\EmpresaExtranjera;
 use Illuminate\Http\Request;
 
@@ -26,11 +23,15 @@ class EmpresaExtranjController extends Controller
         $request->validate([
             'nombre_empresa' => 'required|max:200',
             'pais_origen'    => 'required|max:100',
+            'contacto'       => 'nullable|max:200',
             'moneda_default' => 'nullable|max:10',
             'num_tax_id'     => 'nullable|max:50',
         ]);
 
-        EmpresaExtranjera::create($request->all());
+        EmpresaExtranjera::create($request->only([
+            'nombre_empresa', 'pais_origen', 'contacto', 'moneda_default', 'num_tax_id'
+        ]));
+
         return redirect()->route('empresa-extranjera.index')->with('mensaje', 'Empresa registrada.');
     }
 
@@ -46,7 +47,10 @@ class EmpresaExtranjController extends Controller
             'pais_origen'    => 'required|max:100',
         ]);
 
-        $empresaExtranjera->update($request->all());
+        $empresaExtranjera->update($request->only([
+            'nombre_empresa', 'pais_origen', 'contacto', 'moneda_default', 'num_tax_id'
+        ]));
+
         return redirect()->route('empresa-extranjera.index')->with('mensaje', 'Empresa actualizada.');
     }
 

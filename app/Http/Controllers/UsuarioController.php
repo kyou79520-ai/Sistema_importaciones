@@ -17,16 +17,16 @@ class UsuarioController extends Controller
 
     public function create()
     {
-        $roles = Rol::orderBy('nombre')->get();
+        $roles = Rol::orderBy('nombre_rol')->get();
         return view('usuario.create', compact('roles'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nombre_usuario'  => 'required|unique:usuario|max:50',
-            'nombre_completo' => 'required|max:150',
-            'email'           => 'required|email|unique:usuario',
+            'nombre_usuario'  => 'required|unique:usuario,nombre_usuario|max:50',
+            'nombre_completo' => 'required|max:200',
+            'email'           => 'required|email|unique:usuario,email|max:100',
             'password'        => 'required|min:8|confirmed',
             'telefono'        => 'nullable|max:20',
             'RFC'             => 'nullable|max:13',
@@ -40,10 +40,14 @@ class UsuarioController extends Controller
             'telefono'        => $request->telefono,
             'RFC'             => $request->RFC,
             'activo'          => true,
+            'fecha_creacion'  => now(),
         ]);
 
         if ($request->filled('roles')) {
-            $usuario->roles()->sync($request->roles);
+            $datosRoles = collect($request->roles)
+                ->mapWithKeys(fn($id) => [$id => ['fecha_asignacion' => now()]])
+                ->toArray();
+            $usuario->roles()->sync($datosRoles);
         }
 
         return redirect()->route('usuario.index')->with('mensaje', 'Usuario creado correctamente.');
@@ -51,7 +55,7 @@ class UsuarioController extends Controller
 
     public function edit(Usuario $usuario)
     {
-        $roles            = Rol::orderBy('nombre')->get();
+        $roles              = Rol::orderBy('nombre_rol')->get();
         $rolesSeleccionados = $usuario->roles->pluck('id_rol')->toArray();
         return view('usuario.edit', compact('usuario', 'roles', 'rolesSeleccionados'));
     }
@@ -59,9 +63,9 @@ class UsuarioController extends Controller
     public function update(Request $request, Usuario $usuario)
     {
         $request->validate([
-            'nombre_usuario'  => 'required|max:50|unique:usuario,nombre_usuario,' . $usuario->id_usuario . ',id_usuario',
-            'nombre_completo' => 'required|max:150',
-            'email'           => 'required|email|unique:usuario,email,' . $usuario->id_usuario . ',id_usuario',
+            'nombre_usuario'  => 'required|max:50|unique:usuario,nombre_usuario,'.$usuario->id_usuario.',id_usuario',
+            'nombre_completo' => 'required|max:200',
+            'email'           => 'required|email|max:100|unique:usuario,email,'.$usuario->id_usuario.',id_usuario',
             'password'        => 'nullable|min:8|confirmed',
             'telefono'        => 'nullable|max:20',
             'RFC'             => 'nullable|max:13',
@@ -83,7 +87,10 @@ class UsuarioController extends Controller
         $usuario->update($datos);
 
         if ($request->has('roles')) {
-            $usuario->roles()->sync($request->roles);
+            $datosRoles = collect($request->roles ?? [])
+                ->mapWithKeys(fn($id) => [$id => ['fecha_asignacion' => now()]])
+                ->toArray();
+            $usuario->roles()->sync($datosRoles);
         }
 
         return redirect()->route('usuario.index')->with('mensaje', 'Usuario actualizado.');

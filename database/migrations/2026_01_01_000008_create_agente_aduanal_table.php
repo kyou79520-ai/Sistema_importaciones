@@ -1,10 +1,14 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void {
+    public function up(): void
+    {
+        if (Schema::hasTable('agente_aduanal')) return;
+
         Schema::create('agente_aduanal', function (Blueprint $table) {
             $table->id('id_agente');
             $table->string('nombre_agente');
@@ -15,5 +19,6 @@ return new class extends Migration {
             $table->timestamps();
         });
     }
+
     public function down(): void { Schema::dropIfExists('agente_aduanal'); }
 };

@@ -14,14 +14,25 @@ use App\Http\Controllers\EmpresaImportadoraController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\RolController;
+use App\Http\Controllers\PermisoController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 
-// Raíz pública
+// ── Raíz pública ──────────────────────────────────────────
 Route::get('/', fn() => view('welcome'));
 
-// Auth de Laravel (login, register, logout, password reset)
-Auth::routes();
+// ── Autenticación (manual, ya no usamos Auth::routes()) ──
+Route::middleware('guest')->group(function () {
+    Route::get('/login',  [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login']);
 
-// Todo lo demás requiere login
+    Route::get('/register',  [RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [RegisterController::class, 'register']);
+});
+
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// ── Rutas protegidas ──────────────────────────────────────
 Route::middleware('auth')->group(function () {
 
     // Dashboard
@@ -36,7 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::post('importacion/{importacion}/estado',
         [ImportacionController::class, 'cambiarEstado'])->name('importacion.estado');
 
-    // Items de importación
+    // Items
     Route::post('importacion/{importacion}/items',
         [ItemImportacionController::class, 'store'])->name('importacion.items.store');
     Route::delete('items/{item}',
@@ -74,6 +85,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('empresa-importadora', EmpresaImportadoraController::class);
 
     // ── ADMINISTRACIÓN ─────────────────────────────────────
-    Route::resource('usuario', UsuarioController::class);
-    Route::resource('rol',     RolController::class);
+    Route::resource('usuario',  UsuarioController::class);
+    Route::resource('rol',      RolController::class);
+    Route::resource('permiso',  PermisoController::class);
 });

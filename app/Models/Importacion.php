@@ -23,6 +23,16 @@ class Importacion extends Model
 
     protected $casts = ['fecha_arribo' => 'date'];
 
+    public function pagos()
+{
+    return $this->hasMany(Pago::class, 'id_importacion', 'id_importacion');
+}
+
+public function costos()
+{
+    return $this->hasMany(\App\Models\CostoImportacion::class, 'id_importacion', 'id_importacion');
+}
+
     // ─── Relaciones ──────────────────────────────────────────
     public function usuario()
     {

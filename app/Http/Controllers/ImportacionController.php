@@ -71,10 +71,10 @@ class ImportacionController extends Controller
 
     public function show(Importacion $importacion)
     {
-        $importacion->load([
-            'items.impuestos','documentos','agentes',
-            'empresaImportadora','empresaExtranjera','usuario'
-        ]);
+       $importacion->load([
+    'items.impuestos','documentos','agentes','pagos',
+    'empresaImportadora','empresaExtranjera','usuario'
+]);
         return view('importacion.show', compact('importacion'));
     }
 

@@ -43,21 +43,20 @@ class ImportacionController extends Controller
             'fecha_arribo'       => 'nullable|date',
         ]);
 
-        $importacion = Importacion::create([
+       $importacion = Importacion::create([
     'numero_importacion' => $request->numero_importacion,
-    'id_usuario'         => auth()->id(),              // ← era id_usuario_creador
+    'id_usuario_creador' => auth()->id(),
     'id_empresa_mx'      => $request->id_empresa_mx,
-    'id_empresa_extranjera' => $request->id_empresa_extranjera,
-            'id_empresa'         => $request->id_empresa,
-            'proveedor'          => $request->proveedor,
-            'pais_origen'        => $request->pais_origen,
-            'fecha_arribo'       => $request->fecha_arribo,
-            'estado'             => 'borrador',
-            'total_cif'          => 0,
-            'total_impuestos'    => 0,
-            'total_aduanales'    => 0,
-            'notas'              => $request->notas,
-        ]);
+    'id_empresa'         => $request->id_empresa,
+    'proveedor'          => $request->proveedor,
+    'pais_origen'        => $request->pais_origen,
+    'fecha_arribo'       => $request->fecha_arribo,
+    'estado'             => 'borrador',
+    'total_cif'          => 0,
+    'total_impuestos'    => 0,
+    'total_aduanales'    => 0,
+    'notas'              => $request->notas,
+]);
 
         if ($request->filled('agentes')) {
             $datosAgentes = collect($request->agentes)
@@ -90,27 +89,34 @@ class ImportacionController extends Controller
         ));
     }
 
-    public function update(Request $request, Importacion $importacion)
-    {
-        $request->validate([
-            'numero_importacion' => 'required|unique:importacion,numero_importacion,'.$importacion->id_importacion.',id_importacion',
-            'pais_origen'        => 'required',
-            'fecha_arribo'       => 'nullable|date',
-        ]);
+public function update(Request $request, Importacion $importacion)
+{
+    $request->validate([
+        'numero_importacion' => 'required|unique:importacion,numero_importacion,'.$importacion->id_importacion.',id_importacion',
+        'pais_origen'        => 'required',
+        'fecha_arribo'       => 'nullable|date',
+    ]);
 
-        $importacion->update($request->except(['_token','_method','agentes']));
+    $importacion->update([
+        'numero_importacion' => $request->numero_importacion,
+        'id_empresa_mx'      => $request->id_empresa_mx,
+        'id_empresa'         => $request->id_empresa,
+        'proveedor'          => $request->proveedor,
+        'pais_origen'        => $request->pais_origen,
+        'fecha_arribo'       => $request->fecha_arribo,
+        'notas'              => $request->notas,
+    ]);
 
-        if ($request->has('agentes')) {
-            $datosAgentes = collect($request->agentes ?? [])
-                ->mapWithKeys(fn($id) => [$id => ['fecha_asignacion' => now()]])
-                ->toArray();
-            $importacion->agentes()->sync($datosAgentes);
-        }
-
-        return redirect()->route('importacion.show', $importacion->id_importacion)
-                         ->with('mensaje', 'Importación actualizada.');
+    if ($request->has('agentes')) {
+        $datosAgentes = collect($request->agentes ?? [])
+            ->mapWithKeys(fn($id) => [$id => ['fecha_asignacion' => now()]])
+            ->toArray();
+        $importacion->agentes()->sync($datosAgentes);
     }
 
+    return redirect()->route('importacion.show', $importacion->id_importacion)
+                     ->with('mensaje', 'Importación actualizada.');
+}
     public function destroy(Importacion $importacion)
     {
         $importacion->delete();

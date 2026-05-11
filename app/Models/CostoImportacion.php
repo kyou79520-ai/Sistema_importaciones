@@ -15,10 +15,9 @@ class CostoImportacion extends Model
 
     public $timestamps = false;
 
-    protected $fillable = [
-        'id_importacion', 'concepto', 'monto', 'moneda', 'descripcion'
-    ];
-
+protected $fillable = [
+    'id_importacion', 'concepto', 'monto', 'moneda', 'descripcion'
+];
     protected $casts = ['monto' => 'decimal:2'];
 
     public function importacion()

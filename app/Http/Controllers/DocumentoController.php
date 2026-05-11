@@ -22,23 +22,22 @@ class DocumentoController extends Controller
         );
 
         Documento::create([
-    'id_importacion'  => $importacion->id_importacion,
-    'id_usuario_sube' => auth()->id(), // ← era id_usuario_subida
-    'tipo_documento'  => $request->tipo_documento,
-    'ruta_archivo'    => $ruta,
-    'fecha_subida'    => now(),
-    'validado'        => false,
+    'id_importacion'     => $importacion->id_importacion,
+    'id_usuario_subida'  => auth()->id(),
+    'tipo_documento'     => $request->tipo_documento,
+    'ruta_archivo'       => $ruta,
+    'fecha_subida'       => now(),
+    'validado'           => false,
 ]);
-
         return back()->with('mensaje', 'Documento cargado correctamente.');
     }
 
     public function validar(Documento $documento)
     {
        $documento->update([
-    'validado'           => true,
-    'id_usuario_valida'  => auth()->id(), // ← era id_usuario_validador
-    'fecha_validacion'   => now(),
+    'validado'             => true,
+    'id_usuario_validador' => auth()->id(),
+    'fecha_validacion'     => now(),
 ]);
         return back()->with('mensaje', 'Documento validado.');
     }

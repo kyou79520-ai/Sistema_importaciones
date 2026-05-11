@@ -20,26 +20,26 @@ class EmpleadoController extends Controller
     return view('empleado.create', compact('empleado'));
 }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'Nombre'          => 'required',
-            'ApellidoPaterno' => 'required',
-            'ApellidoMaterno' => 'required',
-            'correo'          => 'required|email',
-            'Foto'            => 'required|image',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'Nombre'          => 'required',
+        'ApellidoPaterno' => 'required',
+        'ApellidoMaterno' => 'required',
+        'correo'          => 'required|email',
+        'Foto'            => 'required|image',
+    ]);
 
-        $datosEmpleado = $request->except('_token');
+    $datosEmpleado = $request->only(['Nombre', 'ApellidoPaterno', 'ApellidoMaterno', 'correo']);
 
-        if ($request->hasFile('Foto')) {
-            $datosEmpleado['Foto'] = $request->file('Foto')->store('uploads', 'public');
-        }
-
-        Empleado::insert($datosEmpleado);
-
-        return redirect('empleado')->with('mensaje', 'Empleado agregado con éxito');
+    if ($request->hasFile('Foto')) {
+        $datosEmpleado['Foto'] = $request->file('Foto')->store('uploads', 'public');
     }
+
+    Empleado::create($datosEmpleado);
+
+    return redirect('empleado')->with('mensaje', 'Empleado agregado con éxito');
+}
 
     public function show(Empleado $empleado)
     {

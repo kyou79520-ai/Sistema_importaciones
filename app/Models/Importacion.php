@@ -15,8 +15,8 @@ class Importacion extends Model
     public $timestamps = false;
 
 protected $fillable = [
-    'numero_importacion', 'id_usuario',           // ← era id_usuario_creador
-    'id_empresa_mx', 'id_empresa_extranjera',     // ← era id_empresa
+    'numero_importacion', 'id_usuario_creador',
+    'id_empresa_mx', 'id_empresa',
     'proveedor', 'pais_origen', 'fecha_arribo', 'estado',
     'total_cif', 'total_impuestos', 'total_aduanales', 'notas'
 ];
@@ -36,7 +36,7 @@ public function costos()
     // ─── Relaciones ──────────────────────────────────────────
    public function usuario()
 {
-    return $this->belongsTo(Usuario::class, 'id_usuario', 'id_usuario'); // ← era id_usuario_creador
+    return $this->belongsTo(Usuario::class, 'id_usuario_creador', 'id_usuario');
 }
 
     public function empresaImportadora()
@@ -46,7 +46,7 @@ public function costos()
 
   public function empresaExtranjera()
 {
-    return $this->belongsTo(EmpresaExtranjera::class, 'id_empresa_extranjera', 'id_empresa'); // ← era id_empresa
+    return $this->belongsTo(EmpresaExtranjera::class, 'id_empresa', 'id_empresa');
 }
 
     public function items()
@@ -75,15 +75,15 @@ public function costos()
         );
     }
 
-    public function agentes()
-    {
-        return $this->belongsToMany(
-            AgenteAduanal::class,
-            'importacion_agente',
-            'id_importacion',
-            'id_agente'
-        )->withPivot('asignado_en');
-    }
+   public function agentes()
+{
+    return $this->belongsToMany(
+        AgenteAduanal::class,
+        'importacion_agente',
+        'id_importacion',
+        'id_agente'
+    )->withPivot('fecha_asignacion');
+}
 
     // ─── Accessors ──────────────────────────────────────────
     public function getEstadoLabelAttribute(): string

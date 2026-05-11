@@ -27,8 +27,8 @@ class RolController extends Controller
             'descripcion' => 'nullable',
         ]);
 
-       $rol = Rol::create([
-    'nombre'      => $request->nombre,  // ← era nombre_rol
+      $rol = Rol::create([
+    'nombre_rol'  => $request->nombre_rol,
     'descripcion' => $request->descripcion,
 ]);
 
@@ -56,8 +56,8 @@ class RolController extends Controller
             'descripcion' => 'nullable',
         ]);
 
-       $rol->update([
-    'nombre'      => $request->nombre,  // ← era nombre_rol
+     $rol->update([
+    'nombre_rol'  => $request->nombre_rol,
     'descripcion' => $request->descripcion,
 ]);
 

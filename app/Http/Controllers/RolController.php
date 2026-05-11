@@ -27,10 +27,10 @@ class RolController extends Controller
             'descripcion' => 'nullable',
         ]);
 
-        $rol = Rol::create([
-            'nombre_rol'  => $request->nombre_rol,
-            'descripcion' => $request->descripcion,
-        ]);
+       $rol = Rol::create([
+    'nombre'      => $request->nombre,  // ← era nombre_rol
+    'descripcion' => $request->descripcion,
+]);
 
         if ($request->filled('permisos')) {
             $datos = collect($request->permisos)
@@ -56,10 +56,10 @@ class RolController extends Controller
             'descripcion' => 'nullable',
         ]);
 
-        $rol->update([
-            'nombre_rol'  => $request->nombre_rol,
-            'descripcion' => $request->descripcion,
-        ]);
+       $rol->update([
+    'nombre'      => $request->nombre,  // ← era nombre_rol
+    'descripcion' => $request->descripcion,
+]);
 
         if ($request->has('permisos')) {
             $datos = collect($request->permisos ?? [])

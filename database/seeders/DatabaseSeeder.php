@@ -42,9 +42,9 @@ class DatabaseSeeder extends Seeder
         }
  
         // ── Roles ─────────────────────────────────────────────
-        $admin = Rol::firstOrCreate(['nombre' => 'Administrador'], ['descripcion' => 'Acceso total al sistema']);
-        $operador = Rol::firstOrCreate(['nombre' => 'Operador'], ['descripcion' => 'Gestiona importaciones y documentos']);
-        $visor = Rol::firstOrCreate(['nombre' => 'Visor'], ['descripcion' => 'Solo lectura']);
+        $admin    = Rol::firstOrCreate(['nombre_rol' => 'Administrador'], ['descripcion' => 'Acceso total al sistema']);
+	$operador = Rol::firstOrCreate(['nombre_rol' => 'Operador'],      ['descripcion' => 'Gestiona importaciones y documentos']);
+	$visor    = Rol::firstOrCreate(['nombre_rol' => 'Visor'],         ['descripcion' => 'Solo lectura']);
  
         // Administrador: todos los permisos
         $admin->permisos()->sync(array_column($permisosCreados, 'id_permiso'));

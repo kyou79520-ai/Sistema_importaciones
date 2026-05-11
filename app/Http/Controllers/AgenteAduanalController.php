@@ -39,9 +39,11 @@ class AgenteAduanalController extends Controller
         return redirect()->route('agente-aduanal.index')->with('mensaje', 'Agente actualizado.');
     }
 
-    public function destroy(AgenteAduanal $agenteAduanal)
-    {
-        $agenteAduanal->delete();
-        return redirect()->route('agente-aduanal.index')->with('mensaje', 'Agente eliminado.');
-    }
+   public function destroy(AgenteAduanal $agenteAduanal)
+{
+    // Desvincula todas las importaciones relacionadas antes de borrar
+    $agenteAduanal->importaciones()->detach();
+    $agenteAduanal->delete();
+    return redirect()->route('agente-aduanal.index')->with('mensaje', 'Agente eliminado.');
+}
 }

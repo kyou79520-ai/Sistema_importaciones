@@ -14,8 +14,8 @@ return new class extends Migration {
             $table->string('telefono')->nullable();
             $table->string('RFC', 13)->nullable();
             $table->boolean('activo')->default(true);
-            $table->timestamp('ultimo_acceso')->nullable();
-            $table->timestamps();
+            $table->timestamp('fecha_creacion')->nullable();
+		$table->timestamps();
         });
     }
     public function down(): void { Schema::dropIfExists('usuario'); }

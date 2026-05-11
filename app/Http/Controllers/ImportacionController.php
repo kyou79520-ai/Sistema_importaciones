@@ -44,9 +44,10 @@ class ImportacionController extends Controller
         ]);
 
         $importacion = Importacion::create([
-            'numero_importacion' => $request->numero_importacion,
-            'id_usuario_creador' => auth()->id(),
-            'id_empresa_mx'      => $request->id_empresa_mx,
+    'numero_importacion' => $request->numero_importacion,
+    'id_usuario'         => auth()->id(),              // ← era id_usuario_creador
+    'id_empresa_mx'      => $request->id_empresa_mx,
+    'id_empresa_extranjera' => $request->id_empresa_extranjera,
             'id_empresa'         => $request->id_empresa,
             'proveedor'          => $request->proveedor,
             'pais_origen'        => $request->pais_origen,

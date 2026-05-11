@@ -7,19 +7,6 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        if (!Schema::hasTable('impuesto')) {
-            Schema::create('impuesto', function (Blueprint $table) {
-                $table->id('id_impuesto');
-                $table->unsignedBigInteger('id_importacion');
-                $table->enum('tipo_impuesto', ['IVA','IGI','DTA','ISAN','IEPS','OTRO']);
-                $table->decimal('tasa', 8, 4)->nullable();
-                $table->decimal('base_calculo', 15, 2)->nullable();
-                $table->decimal('monto', 15, 2);
-                $table->timestamps();
-                $table->foreign('id_importacion')->references('id_importacion')
-                      ->on('importacion')->onDelete('cascade');
-            });
-        }
 
         if (!Schema::hasTable('pago')) {
             Schema::create('pago', function (Blueprint $table) {

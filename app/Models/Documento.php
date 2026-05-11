@@ -11,11 +11,11 @@ class Documento extends Model
 
     public $timestamps = false;
 
-    protected $fillable = [
-        'id_importacion', 'id_usuario_subida', 'id_usuario_validador',
-        'tipo_documento', 'ruta_archivo', 'fecha_subida',
-        'validado', 'fecha_validacion'
-    ];
+protected $fillable = [
+    'id_importacion', 'id_usuario_sube', 'id_usuario_valida', // ← nombres corregidos
+    'tipo_documento', 'ruta_archivo', 'fecha_subida',
+    'validado', 'fecha_validacion'
+];
 
     protected $casts = [
         'validado'         => 'boolean',

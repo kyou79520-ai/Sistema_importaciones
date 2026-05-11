@@ -23,6 +23,6 @@ class AgenteAduanal extends Model
             'importacion_agente',
             'id_agente',
             'id_importacion'
-        )->withPivot('fecha_asignacion');
+        )->withPivot('asignado_en');
     }
 }
